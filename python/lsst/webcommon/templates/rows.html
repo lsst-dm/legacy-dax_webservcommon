@@ -1,0 +1,16 @@
+{%- macro rowdata(row) -%}
+<tr>
+{%- for column in row -%}
+  <td>{{ column }}</td>
+{%- endfor -%}
+</tr>
+{%- endmacro -%}
+
+{%- macro rowheader(row) -%}
+<tr>
+{%- for column in row -%}
+    <th>{{ column }}</th>
+{%- endfor -%}
+</tr>
+{%- endmacro -%}
+

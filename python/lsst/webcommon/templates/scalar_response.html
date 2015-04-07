@@ -1,0 +1,9 @@
+{% extends "response_base.html" %}
+{% import 'tables.html' as tablemacros %}
+{%- block title %}Found Object(s){%- endblock -%}
+{%- block head %}{{ super() }}{%- endblock -%}
+{%- block response %}
+    <div class="result">
+        {{ tablemacros.basictable([response.result])|indent|safe }}
+    </div>
+{% endblock %}

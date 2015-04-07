@@ -1,0 +1,18 @@
+{% extends "response_base.html" %}
+{%- block title %}{{ status_code }} - An Error occurred{% endblock %}
+{%- block head %}{{ super() }}{% endblock %}
+{%- block response %}
+    <div class="exception">
+      Exception: {{ response.exception }}
+    </div>
+    {%- if response.message %}
+    <div class="message">
+        Message: {{ response.message }}
+    </div>
+    {% endif -%}
+    {%- if response.cause %}
+    <div class="cause">
+        Cause: {{ response.cause }}
+    </div>
+    {% endif -%}
+{% endblock -%}
