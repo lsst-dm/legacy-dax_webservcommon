@@ -5,12 +5,12 @@ requires = [
 ]
 
 setup(
-    name='webcommon',
+    name='webservcommon',
     #namespace_packages = ["lsst"],
     version='0.1',
     package_dir={'lsst': 'python/lsst'},
-    package_data={'lsst': ['webcommon/templates/*.html']},
-    packages=['lsst', 'lsst.webcommon'],
+    package_data={'lsst': ['webservcommon/templates/*.html']},
+    packages=['lsst', 'lsst.webservcommon'],
     license='',
     zip_safe=False,
     install_requires=requires

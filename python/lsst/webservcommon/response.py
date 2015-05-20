@@ -29,25 +29,29 @@ class Response(object):
             return False
         return other.__dict__ == self.__dict__
 
+
 class ScalarResponse(Response):
-    _SLOTS = ["result", "metadata"]
+    SLOTS = ["result", "metadata"]
 
     def __init__(self, result, metadata=None):
         self.result = result
         self.metadata = metadata
 
+
 class VectorResponse(Response):
-    _SLOTS = ["results", "metadata"]
+    SLOTS = ["results", "metadata"]
 
     def __init__(self, results, metadata=None, pagination=None):
         self.results = results
         self.pagination = pagination
         self.metadata = metadata
 
+
 class ErrorResponse(Response):
-    _SLOTS = ["exception", "message", "cause"]
+    SLOTS = ["exception", "message", "cause"]
 
     def __init__(self, exception, message=None, cause=None):
         self.exception = exception
         self.message = message
         self.cause = cause
+

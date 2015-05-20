@@ -24,8 +24,8 @@ Generic renderer for Responses
 """
 
 from jinja2 import Environment, PackageLoader
-from .response import ScalarResponse, VectorResponse, ErrorResponse
-env = Environment(loader=PackageLoader('lsst.webcommon', 'templates'))
+from .response import ScalarResponse, VectorResponse
+env = Environment(loader=PackageLoader('lsst.webservcommon', 'templates'))
 
 vector_template = env.get_template('vector_response.html')
 scalar_template = env.get_template('scalar_response.html')
@@ -45,3 +45,4 @@ def renderObjectResponse(response, status_code=None):
     elif isinstance(response, VectorResponse):
         return vector_template.render(response=response, status_code=status_code)
     return error_template.render(response=response, status_code=status_code)
+

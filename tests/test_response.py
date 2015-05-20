@@ -22,8 +22,8 @@
 import unittest
 import json
 from collections import OrderedDict
-from lsst.webcommon import ResponseEncoder, MixInEncoder, TypeEncoder, ResponseDecoder, TypeDecoder, MixInDecoder
-from lsst.webcommon import ScalarResponse, VectorResponse, ErrorResponse
+from lsst.webservcommon import ResponseEncoder, MixInEncoder, TypeEncoder, ResponseDecoder, TypeDecoder, MixInDecoder
+from lsst.webservcommon import ScalarResponse, VectorResponse, ErrorResponse
 
 class TestObject(object):
     def __init__(self, a=None, b=None):
@@ -39,9 +39,6 @@ class TestObject(object):
         return "TestObject({},{})".format(self.a, self.b)
 
 class ComplexEncoder(TypeEncoder):
-    def __init__(self, **kwargs):
-        super(ComplexEncoder, self).__init__(**kwargs)
-
     def can_encode(self, obj):
         return isinstance(obj, complex)
 
@@ -49,14 +46,11 @@ class ComplexEncoder(TypeEncoder):
         return [obj.real, obj.imag]
 
 class TestObjectEncoderDecoder(TypeEncoder, TypeDecoder):
-    def __init__(self, **kwargs):
-        super(TestObjectEncoderDecoder, self).__init__(**kwargs)
-
     def can_encode(self, obj):
         return isinstance(obj, TestObject)
 
     def can_decode(self, obj):
-        return u"_type" in obj.keys() and obj["_type"] == u"TestObject"
+        return "_type" in obj.keys() and obj["_type"] == "TestObject"
 
     def default(self, obj):
         ret = OrderedDict([("_type", "TestObject")])
@@ -102,7 +96,7 @@ class TestResponseEncodingDecoding(unittest.TestCase):
         encoder = ResponseEncoder()
         decoder = ResponseDecoder()
         expected = ErrorResponse("SomeError")
-        actual = decoder.decode(encoder.encode(ErrorResponse("Error")))
+        actual = decoder.decode(encoder.encode(ErrorResponse("SomeError")))
         self.assertEqual(actual, expected)
 
     def test_mixin_encoder(self):
@@ -166,9 +160,7 @@ class TestResponseEncodingDecoding(unittest.TestCase):
         self.assertEqual(actual_obj, expected_obj)
 
     def test_json_with_cls(self):
-        encoder = ResponseEncoder()
-        decoder = ResponseDecoder()
         expected_obj = ErrorResponse("SomeError")
-        actual_str = json.dumps(ErrorResponse("Error"), cls=encoder)
-        actual_obj = json.loads(actual_str, cls=decoder)
+        actual_str = json.dumps(ErrorResponse("SomeError"), cls=ResponseEncoder)
+        actual_obj = json.loads(actual_str, cls=ResponseDecoder)
         self.assertEqual(actual_obj, expected_obj)

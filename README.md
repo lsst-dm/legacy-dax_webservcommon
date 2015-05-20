@@ -1,9 +1,9 @@
 
-LSST webcommon
-==============
+LSST webservcommon
+==================
 
 This project is intended to act as a repository for common code which 
-is shared across web applications, both server-side and client-side.
+is shared across web applications.
 
 Currently, this includes a library to aid in compliance to with LSST's 
 [REST API General Guidelines](https://confluence.lsstcorp.org/x/O4K8AQ), 

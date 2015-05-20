@@ -20,34 +20,36 @@
 
 """
 Implementation of several Range specifications for REST APIs.
+These are optional objects which can be added to VectorResponses.
 @author  Brian Van Klaveren, SLAC
 """
 
-
 class Range(object):
-    def __init__(self, type):
-        self.type = type
-
-class StartStopSlice(Range):
-    def __init__(self, start, stop, length=None):
-        super(StartStopSlice, self).__init__("start_stop")
-        self.start = start
-        self.stop = stop
-        if length:
-            self.length = length
+    pass
 
 class OffsetMaxSlice(Range):
     def __init__(self, offset, max, length=None):
-        super(StartStopSlice, self).__init__("offset_max")
+        """
+        Offset-Max range type.
+        @param offset: The start number of this range.
+        @param max: The count of items in this range.
+        @param length: The total count of objects, if known.
+        """
+        self.type = "offset_max"
         self.offset = offset
         self.max = max
         if length:
             self.length = length
 
-
 class OffsetLimitSlice(Range):
     def __init__(self, offset, limit, length=None):
-        super(StartStopSlice, self).__init__("offset_limit")
+        """
+        Offset-Limit range type.
+        @param offset: The start index of this range.
+        @param limit: The end index of this range.
+        @param length: The total count of objects, if known.
+        """
+        self.type = "offset_limit"
         self.offset = offset
         self.limit = limit
         if length:

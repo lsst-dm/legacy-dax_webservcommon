@@ -22,9 +22,9 @@ __author__ = 'Brian Van Klaveren'
 __copyright__ = "Copyright 2015, AURA/LSST"
 __maintainer__ = "Brian Van Klaveren"
 
-from response import *
-from encoders import *
-from decoders import *
-from render import renderJsonResponse, renderObjectResponse
+from .response import *
+from .encoders import *
+from .decoders import *
+from .render import renderJsonResponse, renderObjectResponse
 
 from .version import *

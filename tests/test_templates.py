@@ -21,7 +21,7 @@
 
 import unittest
 
-from lsst.webcommon import ScalarResponse, VectorResponse, ErrorResponse, renderObjectResponse
+from lsst.webservcommon import ScalarResponse, VectorResponse, ErrorResponse, renderObjectResponse
 
 result = [i for i in range(2)]
 results = [result for i in range(3)]

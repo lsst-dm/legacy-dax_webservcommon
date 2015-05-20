@@ -26,17 +26,28 @@ Decoders for type-based decoding for python objects.
 import json
 from .response import ScalarResponse, VectorResponse, ErrorResponse
 
+
 class TypeDecoder(json.JSONDecoder):
     """
     A JSONDecoder which allows subclasses to notify if they can decode a type.
     """
-    def __init__(self, **kwargs):
-        super(TypeDecoder, self).__init__(object_hook=self.object_hook, **kwargs)
-
     def decode_object(self, obj):
+        """
+        Subclasses should implement this and return the type of object they intend to decode.
+        @param obj: Object to decode
+        :return: Decoded object
+        """
         return obj
 
     def can_decode(self, obj):
+        """
+        This method is called by the object hook to see if this encoder can decode it.
+        It's exposed so the MixinEncoder can use it as well.
+        This method should inspect the object (A python dictionary object) for some
+        sort of signature that it recognizes.
+        @param obj: Object to check if this TypeEncoder can decode it.
+        @return: True if we can decode it.
+        """
         return False
 
     def object_hook(self, obj):
@@ -44,62 +55,58 @@ class TypeDecoder(json.JSONDecoder):
             return self.decode_object(obj)
         return obj
 
-class ScalarResponseDecoder(TypeDecoder):
-    def __init__(self, **kwargs):
-        super(ScalarResponseDecoder, self).__init__(**kwargs)
-
-    def can_decode(self, obj):
-        return u"result" in obj.keys()
-
-    def decode_object(self, obj):
-        return ScalarResponse(obj["result"])
-
-class VectorResponseDecoder(TypeDecoder):
-    def __init__(self, **kwargs):
-        super(VectorResponseDecoder, self).__init__(**kwargs)
-
-    def can_decode(self, obj):
-        return u"results" in obj.keys()
-
-    def decode_object(self, obj):
-        return VectorResponse(obj["results"])
-
-class ErrorResponseDecoder(TypeDecoder):
-    def __init__(self, **kwargs):
-        super(ErrorResponseDecoder, self).__init__()
-
-    def can_decode(self, obj):
-        return u"exception" in obj.keys()
-
-    def decode_object(self, obj):
-        return ErrorResponse(exception=obj["exception"])
 
 class MixInDecoder(TypeDecoder):
-    def __init__(self, decoders, **kwargs):
+    def __init__(self, **kwargs):
         """
         MixInDecoder takes a list of TypeDecoders as it's only parameter. It will iterate through the list
         of TypeDecoders and search for a TypeDecoder which can decode the object, then decode it with that
         TypeDecoder
-        :param Decoders: List of TypeDecoders
+        @param decoders: List of TypeDecoders
         """
-        super(MixInDecoder, self).__init__(**kwargs)
-        self._decoders = decoders
+        self.decoders = kwargs.get("decoders", [])
 
     def decode_object(self, obj):
         decoder = self.get_decoder(obj)
-        return decoder.decode_object(obj) if decoder else json.JSONDecoder.decode(obj)
+        return decoder.decode_object(obj) if decoder else obj
 
     def can_decode(self, obj):
         return self.get_decoder(obj) is not None
 
     def get_decoder(self, obj):
-        for decoder in self._decoders:
+        for decoder in self.decoders:
             if decoder.can_decode(obj):
                 return decoder
         return None
 
+
+class ScalarResponseDecoder(TypeDecoder):
+    def can_decode(self, obj):
+        return "result" in obj.keys()
+
+    def decode_object(self, obj):
+        return ScalarResponse(obj["result"])
+
+
+class VectorResponseDecoder(TypeDecoder):
+    def can_decode(self, obj):
+        return "results" in obj.keys()
+
+    def decode_object(self, obj):
+        return VectorResponse(obj["results"])
+
+
+class ErrorResponseDecoder(TypeDecoder):
+    def can_decode(self, obj):
+        return "exception" in obj.keys()
+
+    def decode_object(self, obj):
+        return ErrorResponse(exception=obj["exception"])
+
+
 class ResponseDecoder(MixInDecoder):
     def __init__(self, **kwargs):
-        super(ResponseDecoder, self).__init__([ScalarResponseDecoder(**kwargs),
-                                               VectorResponseDecoder(**kwargs),
-                                               ErrorResponseDecoder(**kwargs)], **kwargs)
+        self.decoders = [ScalarResponseDecoder(**kwargs),
+                         VectorResponseDecoder(**kwargs),
+                         ErrorResponseDecoder(**kwargs)]
+
