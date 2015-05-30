@@ -1,0 +1,15 @@
+{% import 'rows.html' as rowmacros %}
+{% macro basictable(rows, headers=None) %}
+<table>
+  {%- if headers %}
+  <thead>
+    {{ rowmacros.rowheader(headers)|indent|safe }}
+  </thead>
+  {%- endif %}
+  <tbody>
+    {%- for row in rows %}
+      {{ rowmacros.rowdata(row)|indent|safe }}
+    {%- endfor %}
+  </tbody>
+</table>
+{% endmacro %}
