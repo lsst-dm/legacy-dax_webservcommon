@@ -22,8 +22,8 @@
 import unittest
 import json
 from collections import OrderedDict
-from lsst.webservcommon import ResponseEncoder, MixInEncoder, TypeEncoder, ResponseDecoder, TypeDecoder, MixInDecoder
-from lsst.webservcommon import ScalarResponse, VectorResponse, ErrorResponse
+from lsst.dax.webservcommon import ResponseEncoder, MixInEncoder, TypeEncoder, ResponseDecoder, TypeDecoder, MixInDecoder
+from lsst.dax.webservcommon import ScalarResponse, VectorResponse, ErrorResponse
 
 class TestObject(object):
     def __init__(self, a=None, b=None):
