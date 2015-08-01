@@ -25,7 +25,7 @@ Generic renderer for Responses
 
 from jinja2 import Environment, PackageLoader
 from .response import ScalarResponse, VectorResponse
-env = Environment(loader=PackageLoader('lsst.webservcommon', 'templates'))
+env = Environment(loader=PackageLoader('lsst.dax.webservcommon', 'templates'))
 
 vector_template = env.get_template('vector_response.html')
 scalar_template = env.get_template('scalar_response.html')
