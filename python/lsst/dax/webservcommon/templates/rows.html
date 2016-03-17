@@ -9,7 +9,11 @@
 {%- macro rowheader(row) -%}
 <tr>
 {%- for column in row -%}
+    {%- if column is string -%}
     <th>{{ column }}</th>
-{%- endfor -%}
+    {% elif column is mapping -%}
+    <th {% if column.get("datatype") -%} data-datatype="{{ column["datatype"] }}"{%- endif -%}>{{ column["name"] }}</th>
+    {%- endif -%}
+{%- endfor %}
 </tr>
 {%- endmacro -%}

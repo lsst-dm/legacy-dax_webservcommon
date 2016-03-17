@@ -25,6 +25,6 @@ __maintainer__ = "Brian Van Klaveren"
 from .response import *
 from .encoders import *
 from .decoders import *
-from .render import renderJsonResponse, renderObjectResponse
+from .render import render_response, render_table_response
 
 from .version import *

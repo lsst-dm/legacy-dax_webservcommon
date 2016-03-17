@@ -2,8 +2,8 @@
 {%- block title %}{{ status_code }} - An Error occurred{% endblock %}
 {%- block head %}{{ super() }}{% endblock %}
 {%- block response %}
-    <div class="exception">
-      Exception: {{ response.exception }}
+    <div class="error">
+      Error: {{ response.error }}
     </div>
     {%- if response.message %}
     <div class="message">

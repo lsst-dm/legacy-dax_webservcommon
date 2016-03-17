@@ -21,10 +21,11 @@
 
 import unittest
 
-from lsst.dax.webservcommon import ScalarResponse, VectorResponse, ErrorResponse, renderObjectResponse
+from lsst.dax.webservcommon import ScalarResponse, VectorResponse, ErrorResponse, render_response, render_table_response
 
 result = [i for i in range(2)]
 results = [result for i in range(3)]
+
 
 class RenderTemplateTest(unittest.TestCase):
 
@@ -47,7 +48,9 @@ class RenderTemplateTest(unittest.TestCase):
     </div>
 </body>
 </html>"""
-        html = renderObjectResponse(response=response, status_code = 200)
+        html = render_response(response=response, status_code=200)
+        expected = [line.strip() for line in expected.splitlines(1)]
+        html = [line.strip() for line in html.splitlines(1)]
         self.assertEqual(expected, html, "Vector response incorrect")
 
     def test_scalar(self):
@@ -57,20 +60,20 @@ class RenderTemplateTest(unittest.TestCase):
 <html>
   <head><title>Found Object(s)</title></head>
   <body>
-    <div class="results">
+    <div class="result">
 
     <table>
       <tbody>
-          <tr><td>0</td><td>1</td></tr>
-          <tr><td>0</td><td>1</td></tr>
           <tr><td>0</td><td>1</td></tr>
       </tbody>
     </table>
     </div>
 </body>
 </html>"""
-        html = renderObjectResponse(response=response, status_code = 200)
-        self.assertEqual(expected, html, "Scalar response incorrect")
+        html = render_response(response=response, status_code=200)
+        expected = [line.strip() for line in expected.splitlines(1)]
+        html = [line.strip() for line in html.splitlines(1)]
+        self.assertEquals(expected, html, "Scalar response incorrect")
 
     def test_error(self):
         response = ErrorResponse("NotFoundException")
@@ -79,9 +82,54 @@ class RenderTemplateTest(unittest.TestCase):
 <html>
   <head><title>404 - An Error occurred</title></head>
   <body>
-    <div class="exception">
-      Exception: NotFoundException
+    <div class="error">
+      Error: NotFoundException
     </div></body>
 </html>"""
-        html = renderObjectResponse(response=response, status_code = 404)
-        self.assertEqual(expected, html, "Scalar response incorrect")
+        html = render_response(response=response, status_code=404)
+        self.assertAlmostEqual(expected, html, "Scalar response incorrect")
+
+    def test_table(self):
+        response = {
+            "result": {
+                "table": {
+                    "metadata": {
+                        "elements": [
+                            {"name": "deepForcedSourceId", "datatype": "long"},
+                            {"name": "scienceCcdExposureId", "datatype": "long"}
+                        ]
+                    },
+                    "data": [
+                        [8404051561545729, 125230127],
+                        [8404051561545730, 125230127]
+                    ]
+                }
+            }
+        }
+
+        expected = """\
+<!doctype html>
+<html>
+  <head><title>Found Object(s)</title></head>
+  <body>
+    <div class="result">
+
+
+    <table>
+      <thead>
+        <tr><th data-datatype="long">deepForcedSourceId</th><th data-datatype="long">scienceCcdExposureId</th>
+        </tr>
+      </thead>
+      <tbody>
+          <tr><td>8404051561545729</td><td>125230127</td></tr>
+          <tr><td>8404051561545730</td><td>125230127</td></tr>
+      </tbody>
+    </table>
+    </div>
+</body>
+</html>"""
+
+        html = render_response(response=response, status_code=200)
+        expected = [line.strip() for line in expected.splitlines(1)]
+        html = [line.strip() for line in html.splitlines(1)]
+        self.assertEqual(expected, html, "Table response incorrect")

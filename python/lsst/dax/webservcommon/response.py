@@ -23,6 +23,7 @@ Implementation of Response specifications for REST APIs.
 @author  Brian Van Klaveren, SLAC
 """
 
+
 class Response(object):
     def __eq__(self, other):
         if not isinstance(other, type(self)):
@@ -48,10 +49,10 @@ class VectorResponse(Response):
 
 
 class ErrorResponse(Response):
-    SLOTS = ["exception", "message", "cause"]
+    SLOTS = ["error", "message", "cause"]
 
-    def __init__(self, exception, message=None, cause=None):
-        self.exception = exception
+    def __init__(self, error, message=None, cause=None):
+        self.error = error
         self.message = message
         self.cause = cause
 
