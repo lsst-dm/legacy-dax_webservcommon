@@ -29,20 +29,21 @@ env = Environment(loader=PackageLoader('lsst.dax.webservcommon', 'templates'))
 
 vector_template = env.get_template('vector_response.html')
 scalar_template = env.get_template('scalar_response.html')
+table_template = env.get_template('table_response.html')
 error_template = env.get_template('error_response.html')
 
-def renderJsonResponse(response, status_code=None):
-    if 'result' in response:
+
+def render_response(response, status_code=None):
+    if 'result' in response or isinstance(response, ScalarResponse):
+        if isinstance(response, dict):
+            if 'table' in response["result"]:
+                return render_table_response(response, status_code)
         return scalar_template.render(response=response, status_code=status_code)
-    if 'results' in response:
+    if 'results' in response or isinstance(response, VectorResponse):
         return vector_template.render(response=response, status_code=status_code)
-    if 'exception' in response:
+    if 'error' in response:
         return error_template.render(response=response, status_code=status_code)
 
-def renderObjectResponse(response, status_code=None):
-    if isinstance(response, ScalarResponse):
-        return scalar_template.render(response=response, status_code=status_code)
-    elif isinstance(response, VectorResponse):
-        return vector_template.render(response=response, status_code=status_code)
-    return error_template.render(response=response, status_code=status_code)
 
+def render_table_response(response, status_code=None):
+    return table_template.render(response=response, status_code=status_code)

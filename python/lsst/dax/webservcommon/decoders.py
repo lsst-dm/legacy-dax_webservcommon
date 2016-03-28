@@ -98,10 +98,10 @@ class VectorResponseDecoder(TypeDecoder):
 
 class ErrorResponseDecoder(TypeDecoder):
     def can_decode(self, obj):
-        return "exception" in obj.keys()
+        return "error" in obj.keys()
 
     def decode_object(self, obj):
-        return ErrorResponse(exception=obj["exception"])
+        return ErrorResponse(error=obj["error"])
 
 
 class ResponseDecoder(MixInDecoder):

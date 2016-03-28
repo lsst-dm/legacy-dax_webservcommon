@@ -1,0 +1,10 @@
+{% extends "response_base.html" %}
+{% import 'tables.html' as tablemacros %}
+{%- block title %}Found Object(s){% endblock %}
+{%- block head %}{{ super() }}{% endblock %}
+{%- block response %}
+    <div class="result">
+    {%  set table = response["result"]["table"] %}
+        {{ tablemacros.basictable(table["data"], table["metadata"]["elements"])|indent|safe }}
+    </div>
+{% endblock %}
