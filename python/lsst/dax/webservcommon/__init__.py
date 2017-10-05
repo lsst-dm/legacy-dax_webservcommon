@@ -18,13 +18,6 @@
 # the GNU General Public License along with this program.  If not,
 # see <http://www.lsstcorp.org/LegalNotices/>.
 
-__author__ = 'Brian Van Klaveren'
-__copyright__ = "Copyright 2015, AURA/LSST"
-__maintainer__ = "Brian Van Klaveren"
 
-from .response import *
-from .encoders import *
-from .decoders import *
 from .render import render_response, render_table_response
-
 from .version import *

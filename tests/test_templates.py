@@ -21,7 +21,7 @@
 
 import unittest
 
-from lsst.dax.webservcommon import ScalarResponse, VectorResponse, ErrorResponse, render_response, render_table_response
+from lsst.dax.webservcommon import render_response, render_table_response
 
 result = [i for i in range(2)]
 results = [result for i in range(3)]
@@ -30,7 +30,7 @@ results = [result for i in range(3)]
 class RenderTemplateTest(unittest.TestCase):
 
     def test_vector(self):
-        response = VectorResponse(results)
+        response = dict(results=results)
         expected = """\
 <!doctype html>
 <html>
@@ -54,7 +54,7 @@ class RenderTemplateTest(unittest.TestCase):
         self.assertEqual(expected, html, "Vector response incorrect")
 
     def test_scalar(self):
-        response = ScalarResponse(result)
+        response = dict(result=result)
         expected = """\
 <!doctype html>
 <html>
@@ -76,7 +76,7 @@ class RenderTemplateTest(unittest.TestCase):
         self.assertEquals(expected, html, "Scalar response incorrect")
 
     def test_error(self):
-        response = ErrorResponse("NotFoundException")
+        response = dict(error="NotFoundException")
         expected = """\
 <!doctype html>
 <html>
