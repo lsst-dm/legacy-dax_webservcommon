@@ -24,7 +24,6 @@ Generic renderer for Responses
 """
 
 from jinja2 import Environment, PackageLoader
-from .response import ScalarResponse, VectorResponse
 env = Environment(loader=PackageLoader('lsst.dax.webservcommon', 'templates'))
 
 vector_template = env.get_template('vector_response.html')
@@ -34,12 +33,12 @@ error_template = env.get_template('error_response.html')
 
 
 def render_response(response, status_code=None):
-    if 'result' in response or isinstance(response, ScalarResponse):
+    if 'result' in response:
         if isinstance(response, dict):
             if 'table' in response["result"]:
                 return render_table_response(response, status_code)
         return scalar_template.render(response=response, status_code=status_code)
-    if 'results' in response or isinstance(response, VectorResponse):
+    if 'results' in response:
         return vector_template.render(response=response, status_code=status_code)
     if 'error' in response:
         return error_template.render(response=response, status_code=status_code)
