@@ -49,8 +49,8 @@ class RenderTemplateTest(unittest.TestCase):
 </body>
 </html>"""
         html = render_response(response=response, status_code=200)
-        expected = [line.strip() for line in expected.splitlines(1)]
-        html = [line.strip() for line in html.splitlines(1)]
+        expected = self._string_to_list(expected)
+        html = self._string_to_list(html)
         self.assertEqual(expected, html, "Vector response incorrect")
 
     def test_scalar(self):
@@ -71,8 +71,8 @@ class RenderTemplateTest(unittest.TestCase):
 </body>
 </html>"""
         html = render_response(response=response, status_code=200)
-        expected = [line.strip() for line in expected.splitlines(1)]
-        html = [line.strip() for line in html.splitlines(1)]
+        expected = self._string_to_list(expected)
+        html = self._string_to_list(html)
         self.assertEquals(expected, html, "Scalar response incorrect")
 
     def test_error(self):
@@ -114,7 +114,6 @@ class RenderTemplateTest(unittest.TestCase):
   <body>
     <div class="result">
 
-
     <table>
       <thead>
         <tr><th data-datatype="long">deepForcedSourceId</th><th data-datatype="long">scienceCcdExposureId</th>
@@ -128,8 +127,14 @@ class RenderTemplateTest(unittest.TestCase):
     </div>
 </body>
 </html>"""
-
         html = render_response(response=response, status_code=200)
-        expected = [line.strip() for line in expected.splitlines(1)]
-        html = [line.strip() for line in html.splitlines(1)]
+        expected = self._string_to_list(expected)
+        html = self._string_to_list(html)
         self.assertEqual(expected, html, "Table response incorrect")
+
+    def _string_to_list(self, in_text):
+        out_text = []
+        for line in in_text.splitlines(1):
+            if line.strip():
+                out_text.append(line)
+        return out_text
