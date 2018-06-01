@@ -16,6 +16,15 @@ class DaxAuthException(Exception):
 class JwtAuth:
 
     def __init__(self, key, issuer=None, audience=None, options=None):
+        """
+        JwtAuth is a thin wrapper around the PyJWT project. Parameters
+        are best documented in that project.
+        :param key: Public key to verify RS256 signatures with
+        :param issuer: Domain of issuer, if applicable
+        :param audience: Audience of token, if applicable. If this is
+        false, then the check is turned off
+        :param options: verification options to pass to decode
+        """
         if key is None:
             raise DaxAuthException("Need a valid public key for initialization")
         self.key = key
