@@ -15,9 +15,15 @@ class DaxAuthException(Exception):
 
 class JwtAuth:
 
-    def __init__(self, key=None, audience=""):
-        self.key = key or _demo_key()
+    def __init__(self, key, issuer=None, audience=None, options=None):
+        if key is None:
+            raise DaxAuthException("Need a valid public key for initialization")
+        self.key = key
+        self.issuer = issuer
+        self.options = options or {}
         self.audience = audience
+        if not self.audience and "verify_aud" not in self.options:
+            self.options["verify_aud"] = False
 
     def jwt_required(self):
         """View decorator that requires a valid JWT token and adds"""
@@ -42,12 +48,13 @@ class JwtAuth:
             raise DaxAuthException("Not a bearer token")
 
         token = parts[1]
-        decoded = jwt.decode(token, self.key, algorithm=ALGORITHM, audience=self.audience)
+        decoded = jwt.decode(token, self.key, algorithm=ALGORITHM, audience=self.audience,
+                             options=self.options)
         request.environ["REMOTE_USER"] = decoded["sub"]
         g.jwt = decoded
 
 
-def _demo_key():
+def demo_key():
     """This just returns a demo key from SciTokens"""
     jwk = requests.get("https://demo.scitokens.org/oauth2/certs").json()
     first_key = jwk["keys"][0]
