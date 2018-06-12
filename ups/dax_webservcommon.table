@@ -2,7 +2,6 @@ setupRequired(python)
 setupRequired(scons)
 setupRequired(sconsUtils)
 setupRequired(flask)
-setupRequired(python_pyjwt)
 
 envPrepend(LD_LIBRARY_PATH, ${PRODUCT_DIR}/lib)
 envPrepend(DYLD_LIBRARY_PATH, ${PRODUCT_DIR}/lib)
