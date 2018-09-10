@@ -1,0 +1,7 @@
+cryptography
+flask
+jinja2
+pyjwt
+pytest
+pytest-runner
+setuptools_scm
