@@ -1,5 +1,4 @@
 setupRequired(python)
-setupRequired(scons)
 setupRequired(sconsUtils)
 setupRequired(flask)
 
